@@ -49,7 +49,10 @@ Reduce = pushdown.Reduce
 
 def p_file(p):
     '''file : anythinglist GRAMMAR dnewline rulelist NEWLINE TLIST dnewline tlist NEWLINE NTLIST dnewline ntlist NEWLINE PMETHOD dnewline statelist'''
-    p[0] = Pushdown(p[14])
+    terms = [x for (x, _) in p[8]] + [x for (x, _) in p[12]]
+
+    p[0] = Pushdown(p[14], terms)
+
     for r in p[4]:
         p[0].add_rule(r)
     for s in p[16]:
@@ -114,6 +117,7 @@ def p_list(p):
         p[0] = [p[1]] + p[3]
     else:
         p[0] = [p[1]] + p[2]
+
 
 # def p_forced_list(p):
 #     '''trules  : trule etrules

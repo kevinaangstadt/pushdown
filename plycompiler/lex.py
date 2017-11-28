@@ -23,7 +23,6 @@ def t_RULE(t):
 
 def t_HEADER(t):
     r"Created[ ]by[ ]PLY[ ]version[ ]\d+\.\d+[ ]\([a-zA-z0-9_:/.%]+\)"
-    print "we found the header"
     pass
 
 
