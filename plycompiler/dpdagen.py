@@ -27,6 +27,14 @@ l = %s.%s
 
             ''' % (bn, lexermodule, terms, lexermodule, lexername))
 
+            # a function to convert a hex escape string to the hex characters
+            f.write('''
+def str2hex(s):
+    s = '0' + s[1:]
+    return chr(int(s, 16))
+
+            ''')
+
             # let's write the main function
             f.write('''
 def main():
@@ -44,9 +52,9 @@ def main():
         tok = l.token()
         if not tok:
             break      # No more input
-        print(_terms[tok.type], end='')
+        print(str2hex(_terms[tok.type]), end='')
 
-    print(_terms['$end'], end='')
+    print(str2hex(_terms['$end']), end='')
 
             ''')
 
