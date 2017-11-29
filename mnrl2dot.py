@@ -11,18 +11,21 @@ import mnrl
 
 def mnrl2dot(mn):
     '''Converts a MNRL network to a DOT SUBGRAPH
-    
+
     Args:
         mn (mnrl.MNRLNetwork): the MNRLNetwork
-    
+
     Returns:
         (pydotplus.Graph): the same machine in DOT format
     '''
 
+    def tuple2int((x, _)):
+        return int(x[1:])
+
     g = pydotplus.Graph(name=mn.id)
 
     # STEP 1: add in all of the nodes
-    for node in mn.nodes.values():
+    for _, node in sorted(mn.nodes.iteritems(), key=tuple2int):
         if isinstance(node, mnrl.HPDState):
             # we need to come up with the label for this node
             label = "{id: %s | { stack: %s | pop: %s } | input: %s | push: %s }" % (
@@ -47,7 +50,7 @@ def mnrl2dot(mn):
             raise SystemExit('Unsupported Node Type: ' + str(type(node)))
 
     # STEP 2: add in all the edges
-    for node in mn.nodes.values():
+    for _, node in sorted(mn.nodes.iteritems(), key=tuple2int):
         if isinstance(node, mnrl.HPDState):
             _, conn_l = node.getOutputConnections()[
                 mnrl.MNRLDefs.H_PD_STATE_OUTPUT]
