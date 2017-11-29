@@ -1,7 +1,8 @@
 import os
 import sys
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__))+"/../MNRL/python/")
+sys.path.append(
+    os.path.dirname(os.path.abspath(__file__)) + "/../MNRL/python/")
 
 import mnrl
 import mnrlerror
@@ -324,15 +325,9 @@ class Pushdown(object):
                     tmp.attributes['goto'] = node.attributes['goto']
                     node.attributes.pop('goto', None)
 
-                # clean up the toPop
-                node.attributes.pop('toPop', None)
-
             # check if we have something to push
             if 'toPush' in node.attributes:
                 tmp.pushStack = node.attributes['toPush']
-
-                # clean up the toPush
-                node.attributes.pop('toPush', None)
 
         # STEP 4: Now, it's time to wire everything up
         for id, node in mn.nodes.iteritems():
@@ -343,8 +338,11 @@ class Pushdown(object):
                             (node.id, mnrl.MNRLDefs.H_PD_STATE_OUTPUT),
                             (st.id, mnrl.MNRLDefs.H_PD_STATE_INPUT))
 
-                # we can clean up the goto
-                node.attributes.pop('goto', None)
+        # STEP 5: Clean up the states
+        for id, node in mn.nodes.iteritems():
+            node.attributes.pop('goto', None)
+            node.attributes.pop('toPush', None)
+            node.attributes.pop('toPop', None)
 
         # STEP 5: Return the MNRL network
         return mn
