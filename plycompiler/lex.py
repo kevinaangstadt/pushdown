@@ -83,7 +83,7 @@ def t_NONTERMINAL(t):
 
 
 def t_TERMINAL(t):
-    r'(\$end)|([A-Z]\w*)'
+    r'(\$end)|<empty>|([A-Z]\w*)'
     return t
 
 

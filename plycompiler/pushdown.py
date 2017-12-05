@@ -155,6 +155,7 @@ class Pushdown(object):
             def help(l, s):
                 '''For each shift rule, propagate the origins from the current
                 state's rules, then recurse'''
+                s.mark()
                 for k, v in l.iteritems():
                     if type(v) is Shift:
                         # we need to propagate the reduction origin
@@ -163,7 +164,8 @@ class Pushdown(object):
                             self._states[v._goto].assign_reductions(
                                 rule=r._id, pos=r._pos + 1, reductions=r._orig)
 
-                        if not s.is_marked():
+                        #if not s.is_marked():
+                        if not self._states[v._goto].is_marked():
                             loop(v._goto)
 
             s = self._states[id]
@@ -238,7 +240,9 @@ class Pushdown(object):
                             pushStack=self._terms[trans],
                             enable=enable,
                             attributes={
-                                'goto': rule._goto
+                                'goto': rule._goto,
+                                'ply': k,
+                                'targ': targ
                             })
                     else:
                         # we have a reduction
@@ -257,7 +261,11 @@ class Pushdown(object):
                                 rule._rule._pos - 1,
                                 # we're going to need to push the reduction
                                 'toPush':
-                                self._terms[self._rules[rule._rule._id]._lhs]
+                                self._terms[self._rules[rule._rule._id]._lhs],
+                                'ply':
+                                k,
+                                'targ':
+                                targ
                             })
 
                     mnrl_nodes[k][targ].append(m_state)
@@ -273,7 +281,9 @@ class Pushdown(object):
                             False,  # don't pop the stack
                             enable=enable,
                             attributes={
-                                'goto': rule._goto
+                                'goto': rule._goto,
+                                'ply': k,
+                                'targ': targ
                             })
                     else:
                         # we have a reduction
@@ -284,12 +294,18 @@ class Pushdown(object):
                             report=True,
                             reportId=rule._rule._id,
                             attributes={
-                                'goto': targ,
+                                'goto':
+                                targ,
                                 # we've already popped one
-                                'toPop': rule._rule._pos - 1,
+                                'toPop':
+                                rule._rule._pos - 1,
                                 # we're going to need to push the reduction
                                 'toPush':
-                                self._terms[self._rules[rule._rule._id]]
+                                self._terms[self._rules[rule._rule._id]],
+                                'ply':
+                                k,
+                                'targ':
+                                targ
                             })
                     mnrl_nodes[k][targ].append(m_state)
 
@@ -301,7 +317,7 @@ class Pushdown(object):
                     report=True,
                     reportId=0)
 
-        # STEP 5: We now need to add additional popping nodes
+        # STEP 3: We now need to add additional popping nodes
         for node in mn.nodes.values():
             # we first check if this is a reduction node that needs some
             # additional pops
@@ -312,8 +328,10 @@ class Pushdown(object):
                         # we're just making a chain of pops and connecting them
                         pop = mn.addHPDState(
                             '*',  # ignore the stackSet
-                            True  # perform a pop
-                        )
+                            True,  # perform a pop
+                            attributes={
+                                'targ': tmp.attributes['targ']
+                            })
 
                         mn.addConnection(
                             (tmp.id, mnrl.MNRLDefs.H_PD_STATE_OUTPUT),
@@ -332,11 +350,11 @@ class Pushdown(object):
         # STEP 4: Now, it's time to wire everything up
         for id, node in mn.nodes.iteritems():
             if 'goto' in node.attributes:
-                for _, l in mnrl_nodes[node.attributes['goto']].iteritems():
-                    for st in l:
-                        mn.addConnection(
-                            (node.id, mnrl.MNRLDefs.H_PD_STATE_OUTPUT),
-                            (st.id, mnrl.MNRLDefs.H_PD_STATE_INPUT))
+                print "id", id, "goto:", node.attributes['goto'], "targ", node.attributes['targ']
+                for st in mnrl_nodes[node.attributes['goto']].get(node.attributes['targ'], []):
+                    mn.addConnection(
+                        (node.id, mnrl.MNRLDefs.H_PD_STATE_OUTPUT),
+                        (st.id, mnrl.MNRLDefs.H_PD_STATE_INPUT))
 
         # STEP 5: Clean up the states
         for id, node in mn.nodes.iteritems():
