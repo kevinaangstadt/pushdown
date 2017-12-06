@@ -10,6 +10,8 @@ import mnrlerror
 
 def char(n):
     x = []
+    if n == 0:
+        x.append(0)
     while n:
         x.append(n % 256)
         n //= 256
@@ -106,7 +108,7 @@ class Production(object):
 
 
 class Pushdown(object):
-    def __init__(self, type, terms):
+    def __init__(self, type, terms, nonterms):
         self._type = type
         self._states = dict()
         self._rules = dict()
@@ -121,6 +123,8 @@ class Pushdown(object):
             i += 1
         # the end character will always be 255
         self._terms['$end'] = char(255)
+
+        self._nonterms = nonterms
 
     def add_state(self, st):
         self._states[st._id] = st
@@ -198,17 +202,23 @@ class Pushdown(object):
         mn = mnrl.MNRLNetwork("parser")
 
         # let's build up the information we need now...abs
-        # STEP 1: For each state, make a dict and populate with the reduction
-        # targets
+        # STEP 1: For each state, make a dict and populate with all of the
+        # terminals and non-terminals
         mnrl_nodes = dict.fromkeys(self._states.keys())
 
         for k in mnrl_nodes:
-            # we need to look at each state and figure out what the reduction
-            # targets are
-            mnrl_nodes[k] = dict.fromkeys(self._states[k].get_reductions())
-            for t in mnrl_nodes[k]:
-                # we'll just keep a list of all the states
-                mnrl_nodes[k][t] = list()
+            # we keep terminals and nonterminals separate
+            state = mnrl_nodes[k] = dict()
+
+            # terms represent different lookahead values
+            state["terms"] = dict.fromkeys(self._terms.keys())
+
+            # we get to a non-terminal after a reduction
+            state["nonterms"] = dict.fromkeys(self._nonterms)
+
+            # for each of the nonterms, we need to have different lookaheads
+            for j in state["nonterms"]:
+                state["nonterms"][j] = dict.fromkeys(self._terms.keys())
 
         # STEP 2: Add all of the states
         for k, state in self._states.iteritems():
@@ -227,97 +237,109 @@ class Pushdown(object):
 
             # First, we'll handle the terminals
             for trans, rule in state._t.iteritems():
-                for targ in mnrl_nodes[k]:
-                    # okay, now we need to figure out the parameters for the
-                    # PDState.  This is going to depend on if we have a
-                    # Shift or a Reduce
-                    if type(rule) is Shift:
-                        # we have a shift
-                        m_state = mn.addHPDState(
-                            '*',  # don't care about stack
-                            False,  # don't pop the stack
-                            symbolSet=self._terms[trans],
-                            pushStack=self._terms[trans],
-                            enable=enable,
-                            attributes={
-                                'goto': rule._goto,
-                                'ply': k,
-                                'targ': targ
-                            })
-                    else:
-                        # we have a reduction
-                        m_state = mn.addHPDState(
-                            '*',  # don't care about the stack
-                            True,  # pop the stack
-                            symbolSet=self._terms[trans],
-                            enable=enable,
-                            report=True,
-                            reportId=rule._rule._id,
-                            attributes={
-                                'goto':
-                                targ,
-                                # we've already popped one
-                                'toPop':
-                                rule._rule._pos - 1,
-                                # we're going to need to push the reduction
-                                'toPush':
-                                self._terms[self._rules[rule._rule._id]._lhs],
-                                'ply':
-                                k,
-                                'targ':
-                                targ
-                            })
+                # okay, now we need to figure out the parameters for the
+                # PDState.  This is going to depend on if we have a
+                # Shift or a Reduce
 
-                    mnrl_nodes[k][targ].append(m_state)
+                # First, we make the lookahead memory
+                la_state = mn.addHPDState(
+                    '*',  # don't care about the stack
+                    False,  # don't push to the stack
+                    symbolSet=self._terms[trans],
+                    enable=enable,
+                    pushStack=char(0) if k == 0 else None,
+                    attributes={
+                        'ply': k,
+                        'lookahead': None
+                    })
+                if type(rule) is Shift:
+                    # we have a shift
+                    m_state = mn.addHPDState(
+                        '*',  # don't care about stack
+                        False,  # don't pop the stack
+                        pushStack=char(rule._goto),
+                        attributes={
+                            'goto': rule._goto,
+                            'ply': k,
+                            'lookahead': trans
+                        })
+                else:
+                    # we have a reduction
+                    m_state = mn.addHPDState(
+                        '*',  # don't care about the stack
+                        True
+                        if rule._rule._pos > 0 else False,  # pop the stack
+                        report=True,
+                        reportId=rule._rule._id,
+                        attributes={
+                            # we've already popped one
+                            'toPop': rule._rule._pos - 1,
+                            'ply': k,
+                            'lookahead': trans,
+                            'lhs': self._rules[rule._rule._id]._lhs
+                        })
+
+                # we make a connection between the lookahead and the action
+                mn.addConnection(
+                    (la_state.id, mnrl.MNRLDefs.H_PD_STATE_OUTPUT),
+                    (m_state.id, mnrl.MNRLDefs.H_PD_STATE_INPUT))
+                mnrl_nodes[k]["terms"][trans] = {
+                    'lookahead': la_state,
+                    'action': m_state
+                }
 
             # Now, we will do the same thing for the non-terminals
             for trans, rule in state._nt.iteritems():
-                for targ in mnrl_nodes[k]:
+                for term in mnrl_nodes[k]["nonterms"][trans]:
                     if type(rule) is Shift:
                         # we have a shift
                         # It's already on the stack, just go
                         m_state = mn.addHPDState(
-                            self._terms[trans],  # peek at stack
+                            char(k),  # peek at stack
                             False,  # don't pop the stack
-                            enable=enable,
+                            pushStack=char(rule._goto),
                             attributes={
-                                'goto': rule._goto,
+                                'goto_a': rule._goto,
                                 'ply': k,
-                                'targ': targ
+                                'lookahead': term
                             })
                     else:
                         # we have a reduction
                         m_state = mn.addHPDState(
-                            self._terms[trans],  # peek at the stack
-                            True,  # pop the stack
-                            enable=enable,
+                            char(k),  # peek at the stack
+                            True
+                            if rule._rule._pos > 0 else False,  # pop the stack
                             report=True,
                             reportId=rule._rule._id,
                             attributes={
-                                'goto':
-                                targ,
                                 # we've already popped one
-                                'toPop':
-                                rule._rule._pos - 1,
-                                # we're going to need to push the reduction
-                                'toPush':
-                                self._terms[self._rules[rule._rule._id]],
-                                'ply':
-                                k,
-                                'targ':
-                                targ
+                                'toPop': rule._rule._pos - 1,
+                                'ply': k,
+                                'lookahead': term,
+                                'lhs': self._rules[rule._rule._id]._lhs
                             })
-                    mnrl_nodes[k][targ].append(m_state)
+                    mnrl_nodes[k]["nonterms"][trans][term] = m_state
 
             # Finally, we'll check to see if this state has the final reduction
+            # we only get here by a reduction
+
             if k != 0 and state.contains_final():
-                mn.addHPDState(
-                    char(255),  # the stack should have the end character
+                final = mn.addHPDState(
+                    '*',  # don't care about the stack
                     False,  # don't pop
                     report=True,
-                    reportId=0)
+                    reportId=0,
+                    attributes={
+                        'ply': k,
+                        'lookahead': "$end"
+                    })
+                mnrl_nodes[k]["terms"]["$end"] = {
+                    "lookahead": None,
+                    "action": final
+                }
 
         # STEP 3: We now need to add additional popping nodes
+        reductions = list()
         for node in mn.nodes.values():
             # we first check if this is a reduction node that needs some
             # additional pops
@@ -330,7 +352,8 @@ class Pushdown(object):
                             '*',  # ignore the stackSet
                             True,  # perform a pop
                             attributes={
-                                'targ': tmp.attributes['targ']
+                                'lookahead': tmp.attributes['lookahead'],
+                                'lhs': tmp.attributes['lhs']
                             })
 
                         mn.addConnection(
@@ -339,26 +362,68 @@ class Pushdown(object):
 
                         tmp = pop
 
-                    # we will move the goto to the end of the pop chain
-                    tmp.attributes['goto'] = node.attributes['goto']
-                    node.attributes.pop('goto', None)
-
-            # check if we have something to push
-            if 'toPush' in node.attributes:
-                tmp.pushStack = node.attributes['toPush']
+                # add this to our list that we need to wire up for reductions
+                reductions.append(tmp)
 
         # STEP 4: Now, it's time to wire everything up
+
+        # STEP 4.1: We'll do the reduction wiring
+        for node in reductions:
+            la = node.attributes['lookahead']
+            lhs = node.attributes['lhs']
+
+            # we will go through all of the states, and make a connection
+            # where there is a nonterminal with the particular lookahead
+            for id, state in mnrl_nodes.iteritems():
+                for lookahead, target_node in state['nonterms'].get(
+                        lhs, dict()).iteritems():
+                    if target_node is not None and lookahead == la:
+                        # This reduction state exists, we should connect it
+                        mn.addConnection(
+                            (node.id, mnrl.MNRLDefs.H_PD_STATE_OUTPUT),
+                            (target_node.id, mnrl.MNRLDefs.H_PD_STATE_INPUT))
+
+        # STEP 4.2: We'll connect all of the shift operations
         for id, node in mn.nodes.iteritems():
             if 'goto' in node.attributes:
-                print "id", id, "goto:", node.attributes['goto'], "targ", node.attributes['targ']
-                for st in mnrl_nodes[node.attributes['goto']].get(node.attributes['targ'], []):
-                    mn.addConnection(
-                        (node.id, mnrl.MNRLDefs.H_PD_STATE_OUTPUT),
-                        (st.id, mnrl.MNRLDefs.H_PD_STATE_INPUT))
+                # this was a shift of a term, so we need a new lookahead
+                for _, st in mnrl_nodes[node.attributes['goto']][
+                        'terms'].iteritems():
+                    if st is not None:
+                        mn.addConnection(
+                            (node.id, mnrl.MNRLDefs.H_PD_STATE_OUTPUT),
+                            (st["lookahead"].id,
+                             mnrl.MNRLDefs.H_PD_STATE_INPUT))
+            if 'goto_a' in node.attributes:
+                # this was a shift of a nonterm, so we don't need lookahead
+                for _, st in mnrl_nodes[node.attributes['goto_a']][
+                        'terms'].iteritems():
+                    if st is not None:
+                        mn.addConnection(
+                            (node.id, mnrl.MNRLDefs.H_PD_STATE_OUTPUT),
+                            (st["action"].id, mnrl.MNRLDefs.H_PD_STATE_INPUT))
 
-        # STEP 5: Clean up the states
+        # STEP 5: remove extra nodes
+        changed = True
+        while changed:
+            changed = False
+            for node in mn.nodes.values():
+                if len(
+                        node.getInputConnections()
+                    [mnrl.MNRLDefs.H_PD_STATE_INPUT][1]
+                ) == 0 and node.enable == mnrl.MNRLDefs.ENABLE_ON_ACTIVATE_IN:
+                    mn.removeNode(node.id)
+                    changed = True
+
+                if len(node.getOutputConnections()
+                       [mnrl.MNRLDefs.H_PD_STATE_OUTPUT]
+                       [1]) == 0 and not node.report:
+                    mn.removeNode(node.id)
+                    changed = True
+
+        # STEP 6: Clean up the nodes
         for id, node in mn.nodes.iteritems():
-            node.attributes.pop('goto', None)
+            #node.attributes.pop('goto', None)
             node.attributes.pop('toPush', None)
             node.attributes.pop('toPop', None)
 

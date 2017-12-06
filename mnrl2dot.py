@@ -9,6 +9,11 @@ import pydotplus
 import mnrl
 
 
+def esc(s):
+    tmp = s if s is not None else "None"
+    return tmp.replace('\\', '\\\\')
+
+
 def mnrl2dot(mn):
     '''Converts a MNRL network to a DOT SUBGRAPH
 
@@ -27,10 +32,15 @@ def mnrl2dot(mn):
     # STEP 1: add in all of the nodes
     for _, node in sorted(mn.nodes.iteritems(), key=tuple2int):
         if isinstance(node, mnrl.HPDState):
-            # we need to come up with the label for this node
-            label = "{id: %s | { stack: %s | pop: %s } | input: %s | push: %s }" % (
-                node.id, node.stackSet, node.popStack, node.symbolSet,
-                node.pushStack)
+            if node.report:
+                label = "{id: %s | { stack: %s | pop: %s } | input: %s | push: %s | {ply: %s | la: %s} | rule: %s | goto: %s}" % (
+                    esc(node.id), esc(node.stackSet), node.popStack,
+                    esc(node.symbolSet), esc(node.pushStack), node.attributes['ply'], node.attributes['lookahead'], node.reportId, node.attributes.get('goto', ""))
+            else:
+                # we need to come up with the label for this node
+                label = "{id: %s | { stack: %s | pop: %s } | input: %s | push: %s | {ply: %s |la: %s} | goto: %s }" % (
+                    esc(node.id), esc(node.stackSet), node.popStack,
+                    esc(node.symbolSet), esc(node.pushStack), node.attributes.get('ply',""), node.attributes['lookahead'], node.attributes.get('goto', ""))
 
             n = pydotplus.Node(name=node.id)
             n.set_label(label)

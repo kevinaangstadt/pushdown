@@ -92,6 +92,8 @@ def main():
     machine.determine_reductions()
     mn = machine.generate_mnrl()
     mn.exportToFile(args.mnrlfile)
+    
+    print "Number of States: %d" % (len(mn.nodes))
 
     write_lexer(
         machine._terms,

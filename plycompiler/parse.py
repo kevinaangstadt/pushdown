@@ -49,9 +49,10 @@ Reduce = pushdown.Reduce
 
 def p_file(p):
     '''file : anythinglist GRAMMAR dnewline rulelist NEWLINE TLIST dnewline tlist NEWLINE NTLIST dnewline ntlist NEWLINE PMETHOD dnewline statelist'''
-    terms = [x for (x, _) in p[8]] + [x for (x, _) in p[12]]
+    terms = [x for (x, _) in p[8]]
+    nterms = [x for (x, _) in p[12]]
 
-    p[0] = Pushdown(p[14], terms)
+    p[0] = Pushdown(p[14], terms, nterms)
 
     for r in p[4]:
         p[0].add_rule(r)
