@@ -396,9 +396,9 @@ class Pushdown(object):
                              mnrl.MNRLDefs.H_PD_STATE_INPUT))
             if 'goto_a' in node.attributes:
                 # this was a shift of a nonterm, so we don't need lookahead
-                for _, st in mnrl_nodes[node.attributes['goto_a']][
+                for lookahead, st in mnrl_nodes[node.attributes['goto_a']][
                         'terms'].iteritems():
-                    if st is not None:
+                    if st is not None and lookahead == la:
                         mn.addConnection(
                             (node.id, mnrl.MNRLDefs.H_PD_STATE_OUTPUT),
                             (st["action"].id, mnrl.MNRLDefs.H_PD_STATE_INPUT))
