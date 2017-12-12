@@ -219,7 +219,7 @@ def p_error(p):
     if not p:
         print "Endo of File!"
         return
-    print "Syntax error at token", p.type
+    print "Syntax error at token", p.type, "on line", p.lineno
     parser.errorok()
 
 
