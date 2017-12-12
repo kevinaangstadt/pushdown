@@ -385,6 +385,7 @@ class Pushdown(object):
 
         # STEP 4.2: We'll connect all of the shift operations
         for id, node in mn.nodes.iteritems():
+            la = node.attributes['lookahead']
             if 'goto' in node.attributes:
                 # this was a shift of a term, so we need a new lookahead
                 for _, st in mnrl_nodes[node.attributes['goto']][
