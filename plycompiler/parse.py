@@ -211,14 +211,14 @@ def p_operation(p):
     if len(p) == 2:
         p[0] = Shift(p[1])
     else:
-        p[0] = Reduce(ParseState(p[1], p[3]._rhs.index('.')))
+        p[0] = Reduce(ParseState(p[1], position=p[3]._rhs.index('.')))
 
 
 # Error rule for syntax errors
 def p_error(p):
     if not p:
         print "Endo of File!"
-        return
+        parser.errok()
     print "Syntax error at token", p.type, "on line", p.lineno
     parser.errorok()
 

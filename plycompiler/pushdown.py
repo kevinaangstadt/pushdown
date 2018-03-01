@@ -95,7 +95,7 @@ class Rule(object):
 
 
 class ParseState(object):
-    def __init__(self, rule_id, position):
+    def __init__(self, rule_id, position=-1):
         self._id = rule_id
         self._pos = position
         self._orig = list()
@@ -137,6 +137,20 @@ class Pushdown(object):
 
     def add_nt(self, nt, nums):
         self._nt[nt] = nums
+
+    def fix_rules(self):
+        '''Depending on the PA format, we might not know how many symbols to pop
+        on a reduction.  This code walks through and updates the value based
+        on the current rule being reduced.'''
+        for i, state in self._states.iteritems():
+            for j, action in state._t.iteritems():
+                if isinstance(action, Reduce) and action._rule._pos < 0:
+                    # the position hasn't been set yet
+                    action._rule._pos = len(self._rules[action._rule._id]._rhs)
+            for j, action in state._nt.iteritems():
+                if isinstance(action, Reduce) and action._rule._pos < 0:
+                    # the position hasn't been set yet
+                    action._rule._pos = len(self._rules[action._rule._id]._rhs)
 
     def determine_reductions(self):
         '''For the reduction rules to work, we need to figure out where to
@@ -198,6 +212,9 @@ class Pushdown(object):
         """Here, we will convert the parser into a homogeneous DPDA and return
         it as a MNRL file"""
 
+        # first fix up the postions
+        self.fix_rules()
+
         # make a MNRL network that we'll use eventually
         mn = mnrl.MNRLNetwork("parser")
 
@@ -224,6 +241,9 @@ class Pushdown(object):
         for k, state in self._states.iteritems():
             # we need to create a different state for each combination
             # of input/stack/push/pop
+
+            # log if we found the final accept
+            accept_found = False
 
             # check if we are the starting state
             if k == 0:
@@ -252,7 +272,7 @@ class Pushdown(object):
                         'ply': k,
                         'lookahead': None
                     })
-                if type(rule) is Shift:
+                if isinstance(rule, Shift):
                     # we have a shift
                     m_state = mn.addHPDState(
                         '*',  # don't care about stack
@@ -263,7 +283,7 @@ class Pushdown(object):
                             'ply': k,
                             'lookahead': trans
                         })
-                else:
+                elif isinstance(rule, Reduce):
                     # we have a reduction
                     m_state = mn.addHPDState(
                         '*',  # don't care about the stack
@@ -278,6 +298,19 @@ class Pushdown(object):
                             'lookahead': trans,
                             'lhs': self._rules[rule._rule._id]._lhs
                         })
+                else:
+                    # we have an accept rule from bison
+                    if trans == '$end':
+                        m_state = mn.addHPDState(
+                            '*',  # don't care about the stack
+                            False,  # don't pop
+                            report=True,
+                            reportId=0,
+                            attributes={
+                                'ply': k,
+                                'lookahead': "$end"
+                            })
+                        accept_found = True
 
                 # we make a connection between the lookahead and the action
                 mn.addConnection(
@@ -291,7 +324,7 @@ class Pushdown(object):
             # Now, we will do the same thing for the non-terminals
             for trans, rule in state._nt.iteritems():
                 for term in mnrl_nodes[k]["nonterms"][trans]:
-                    if type(rule) is Shift:
+                    if isinstance(rule, Shift):
                         # we have a shift
                         # It's already on the stack, just go
                         m_state = mn.addHPDState(
@@ -303,7 +336,7 @@ class Pushdown(object):
                                 'ply': k,
                                 'lookahead': term
                             })
-                    else:
+                    elif isinstance(rule, Reduce):
                         # we have a reduction
                         m_state = mn.addHPDState(
                             char(k),  # peek at the stack
@@ -318,12 +351,13 @@ class Pushdown(object):
                                 'lookahead': term,
                                 'lhs': self._rules[rule._rule._id]._lhs
                             })
+
                     mnrl_nodes[k]["nonterms"][trans][term] = m_state
 
             # Finally, we'll check to see if this state has the final reduction
             # we only get here by a reduction
 
-            if k != 0 and state.contains_final():
+            if not accept_found and k != 0 and state.contains_final():
                 final = mn.addHPDState(
                     '*',  # don't care about the stack
                     False,  # don't pop
@@ -436,7 +470,18 @@ class Shift(object):
     def __init__(self, goto):
         self._goto = goto
 
+    def __str__(self):
+        return "Shift, and go to state {}".format(self._goto)
+
 
 class Reduce(object):
     def __init__(self, rule):
         self._rule = rule
+
+    def __str__(self):
+        return "Reduce using rule {}".format(self._rule._id)
+
+
+class Accept(object):
+    def __str__(self):
+        return "Accept"

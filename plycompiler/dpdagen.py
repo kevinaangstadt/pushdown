@@ -3,6 +3,37 @@
 import argparse
 import os
 import parse
+import bisonparse
+
+
+def write_tokens(terms, enum_name="token", filename=None):
+    """ Helper file to generate C header with term enum """
+
+    def end_ff(k):
+        if k == "$end":
+            return "$end = 0xff"
+        else:
+            return k
+
+    if filename is None:
+        filename = "tokens.h"
+
+    bn = os.path.basename(filename)
+
+    try:
+        with open(filename, "w") as f:
+            f.write('''
+// {}
+// This file was automatically generated.  Do not edit.
+            '''.format(bn))
+
+            f.write('''
+typedef enum {{
+    MY_EOF,
+    {}
+}} {};'''.format(",\n    ".join([end_ff(k) for k in terms.keys()]), enum_name))
+    except IOError:
+        raise
 
 
 def write_lexer(terms, filename=None, lexermodule='lexer', lexername='lexer'):
@@ -82,24 +113,41 @@ def main():
         "--wrapper",
         default="lex_wrapper.py",
         help="the name of the wrapper generated for the lexer")
+    p.add_argument(
+        "-b",
+        "--bison",
+        action="store_true",
+        default=False,
+        help="use the parser for bison output")
+    p.add_argument(
+        "--debug",
+        action="store_true",
+        default=False,
+        help="turn on debugging for parsing")
 
     args = p.parse_args()
 
     with open(args.parsetable, "rb") as f:
         thefile = f.read()
 
-    machine = parse.parser.parse(thefile)
-    machine.determine_reductions()
+    if args.bison:
+        machine = bisonparse.parser.parse(thefile, debug=args.debug)
+    else:
+        machine = parse.parser.parse(thefile, debug=args.debug)
+    # machine.determine_reductions()
     mn = machine.generate_mnrl()
     mn.exportToFile(args.mnrlfile)
-    
+
     print "Number of States: %d" % (len(mn.nodes))
 
-    write_lexer(
-        machine._terms,
-        filename=args.wrapper,
-        lexermodule=args.lexermodule,
-        lexername=args.lexername)
+    if args.bison:
+        write_tokens(machine._terms)
+    else:
+        write_lexer(
+            machine._terms,
+            filename=args.wrapper,
+            lexermodule=args.lexermodule,
+            lexername=args.lexername)
 
 
 if __name__ == '__main__':
