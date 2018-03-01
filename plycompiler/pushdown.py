@@ -30,43 +30,6 @@ class State(object):
         self._nt = nttransitions
         self._mark = False
 
-    def assign_reductions(self, rule=None, pos=None, reductions=None):
-        doit = True
-
-        if reductions is None:
-            # we should just assign origins for the closure
-            doit = False
-
-        # figure out which rules for this state we're trying to update
-        therule = self._rules
-        if rule is not None and pos is not None:
-            therule = [
-                x for x in self._rules if x._id == rule and x._pos == pos
-            ]
-
-        if doit:
-            # we have reduction origin information
-            for t in therule:
-                for r in reductions:
-                    if r not in t._orig:
-                        # only add the origin if it's not there already
-                        self._changed = True
-                        t._orig.append(r)
-        else:
-            for t in therule:
-                if len(t._orig) == 0 and t._pos == 0:
-                    # this is a closure rule; add the origin as ourself
-                    self._changed = True
-                    t._orig.append(self._id)
-
-    def get_reductions(self):
-        target_set = set()
-        for r in self._rules:
-            for o in r._orig:
-                target_set.add(o)
-
-        return list(target_set)
-
     def contains_final(self):
         for r in self._rules:
             if r._id == 0:
@@ -151,62 +114,6 @@ class Pushdown(object):
                 if isinstance(action, Reduce) and action._rule._pos < 0:
                     # the position hasn't been set yet
                     action._rule._pos = len(self._rules[action._rule._id]._rhs)
-
-    def determine_reductions(self):
-        '''For the reduction rules to work, we need to figure out where to
-        return to for each rule.  So this method performs a pass over the
-        states to determine the origin of each rule.'''
-
-        def loop(id):
-            ''' A helper function that goes though the rules for a state and
-            adds the origins'''
-
-            def match(f, k):
-                '''Determine if a particular rule matches a shift'''
-                if len(self._rules[f._id]._rhs) > f._pos:
-                    el = self._rules[f._id]._rhs[f._pos]
-                    if el == k:
-                        return True
-                else:
-                    return False
-
-            def help(l, s):
-                '''For each shift rule, propagate the origins from the current
-                state's rules, then recurse'''
-                s.mark()
-                for k, v in l.iteritems():
-                    if type(v) is Shift:
-                        # we need to propagate the reduction origin
-                        rules = [f for f in s._rules if match(f, k)]
-                        for r in rules:
-                            self._states[v._goto].assign_reductions(
-                                rule=r._id, pos=r._pos + 1, reductions=r._orig)
-
-                        #if not s.is_marked():
-                        if not self._states[v._goto].is_marked():
-                            loop(v._goto)
-
-            s = self._states[id]
-            help(s._t, s)
-            help(s._nt, s)
-            s.mark()
-
-        # to get things started, we will do all of state 0
-        self._states[0].assign_reductions(rule=0, pos=0, reductions=[0])
-        for k, v in self._states.iteritems():
-            v.assign_reductions()
-
-        fixpoint = False
-        while fixpoint is not True:
-            # Because we're using DFS, there might be a need to run the loop
-            # several times.  So we track changes to reach a fixpoint
-            for k, v in self._states.iteritems():
-                v.unmark()
-                v._changed = False
-
-            loop(0)
-
-            fixpoint = all(not v._changed for k, v in self._states.iteritems())
 
     def generate_mnrl(self):
         """Here, we will convert the parser into a homogeneous DPDA and return
