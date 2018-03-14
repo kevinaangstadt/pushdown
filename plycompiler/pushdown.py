@@ -89,6 +89,9 @@ class Pushdown(object):
 
         self._nonterms = nonterms
 
+        # set multipop to be defaulted off
+        self._multipop = False
+
     def add_state(self, st):
         self._states[st._id] = st
 
@@ -100,6 +103,9 @@ class Pushdown(object):
 
     def add_nt(self, nt, nums):
         self._nt[nt] = nums
+
+    def set_multipop(self, new_val):
+        self._multipop = new_val
 
     def fix_rules(self):
         '''Depending on the PA format, we might not know how many symbols to pop
@@ -171,7 +177,7 @@ class Pushdown(object):
                 # First, we make the lookahead memory
                 la_state = mn.addHPDState(
                     '*',  # don't care about the stack
-                    False,  # don't push to the stack
+                    0,  # don't pop the stack
                     symbolSet=self._terms[trans],
                     enable=enable,
                     pushStack=char(0) if k == 0 else None,
@@ -183,7 +189,7 @@ class Pushdown(object):
                     # we have a shift
                     m_state = mn.addHPDState(
                         '*',  # don't care about stack
-                        False,  # don't pop the stack
+                        0,  # don't pop the stack
                         pushStack=char(rule._goto),
                         attributes={
                             'goto': rule._goto,
@@ -194,13 +200,14 @@ class Pushdown(object):
                     # we have a reduction
                     m_state = mn.addHPDState(
                         '*',  # don't care about the stack
-                        True
-                        if rule._rule._pos > 0 else False,  # pop the stack
+                        rule._rule._pos if self._multipop else 1
+                        if rule._rule._pos > 0 else 0,  # pop the stack
                         report=True,
                         reportId=rule._rule._id,
                         attributes={
                             # we've already popped one
-                            'toPop': rule._rule._pos - 1,
+                            'toPop': 0
+                            if self._multipop else rule._rule._pos - 1,
                             'ply': k,
                             'lookahead': trans,
                             'lhs': self._rules[rule._rule._id]._lhs
@@ -210,7 +217,7 @@ class Pushdown(object):
                     if trans == '$end':
                         m_state = mn.addHPDState(
                             '*',  # don't care about the stack
-                            False,  # don't pop
+                            0,  # don't pop
                             report=True,
                             reportId=0,
                             attributes={
@@ -236,7 +243,7 @@ class Pushdown(object):
                         # It's already on the stack, just go
                         m_state = mn.addHPDState(
                             char(k),  # peek at stack
-                            False,  # don't pop the stack
+                            0,  # don't pop the stack
                             pushStack=char(rule._goto),
                             attributes={
                                 'goto_a': rule._goto,
@@ -247,16 +254,20 @@ class Pushdown(object):
                         # we have a reduction
                         m_state = mn.addHPDState(
                             char(k),  # peek at the stack
-                            True
-                            if rule._rule._pos > 0 else False,  # pop the stack
+                            rule._rule._pos if self._multipop else 1
+                            if rule._rule._pos > 0 else 0,  # pop the stack
                             report=True,
                             reportId=rule._rule._id,
                             attributes={
                                 # we've already popped one
-                                'toPop': rule._rule._pos - 1,
-                                'ply': k,
-                                'lookahead': term,
-                                'lhs': self._rules[rule._rule._id]._lhs
+                                'toPop':
+                                0 if self._multipop else rule._rule._pos - 1,
+                                'ply':
+                                k,
+                                'lookahead':
+                                term,
+                                'lhs':
+                                self._rules[rule._rule._id]._lhs
                             })
 
                     mnrl_nodes[k]["nonterms"][trans][term] = m_state
@@ -267,7 +278,7 @@ class Pushdown(object):
             if not accept_found and k != 0 and state.contains_final():
                 final = mn.addHPDState(
                     '*',  # don't care about the stack
-                    False,  # don't pop
+                    0,  # don't pop
                     report=True,
                     reportId=0,
                     attributes={
@@ -291,7 +302,7 @@ class Pushdown(object):
                         # we're just making a chain of pops and connecting them
                         pop = mn.addHPDState(
                             '*',  # ignore the stackSet
-                            True,  # perform a pop
+                            1,  # perform a pop
                             attributes={
                                 'lookahead': tmp.attributes['lookahead'],
                                 'lhs': tmp.attributes['lhs']
@@ -319,6 +330,8 @@ class Pushdown(object):
                 for lookahead, target_node in state['nonterms'].get(
                         lhs, dict()).iteritems():
                     if target_node is not None and lookahead == la:
+                        if id == 17 and node.id == "_471":
+                            print lhs, target_node.id, node.attributes["ply"]
                         # This reduction state exists, we should connect it
                         mn.addConnection(
                             (node.id, mnrl.MNRLDefs.H_PD_STATE_OUTPUT),
@@ -356,7 +369,7 @@ class Pushdown(object):
                 ) == 0 and node.enable == mnrl.MNRLDefs.ENABLE_ON_ACTIVATE_IN:
                     mn.removeNode(node.id)
                     changed = True
-
+        
                 if len(node.getOutputConnections()
                        [mnrl.MNRLDefs.H_PD_STATE_OUTPUT]
                        [1]) == 0 and not node.report:

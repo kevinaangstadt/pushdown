@@ -120,6 +120,12 @@ def main():
         default=False,
         help="use the parser for bison output")
     p.add_argument(
+        "-m",
+        "--multipop",
+        action="store_true",
+        default=False,
+        help="enable multipop DPDA states")
+    p.add_argument(
         "--debug",
         action="store_true",
         default=False,
@@ -134,7 +140,10 @@ def main():
         machine = bisonparse.parser.parse(thefile, debug=args.debug)
     else:
         machine = parse.parser.parse(thefile, debug=args.debug)
-    # machine.determine_reductions()
+
+    # set up multipop
+    machine.set_multipop(args.multipop)
+
     mn = machine.generate_mnrl()
     mn.exportToFile(args.mnrlfile)
 
