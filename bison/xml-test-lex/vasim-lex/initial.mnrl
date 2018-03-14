@@ -1,0 +1,2165 @@
+{
+    "id": "pcre",
+    "nodes": [
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 0,
+                "symbolSet": "[\\t\\n\\r\\x20]"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "0_4",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "0_4",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "-"
+            },
+            "enable": "onActivateIn",
+            "id": "10_10",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "10_11",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "[^-]"
+            },
+            "enable": "onActivateIn",
+            "id": "10_11",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "10_9",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "10_10",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "10_12",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "-"
+            },
+            "enable": "onActivateIn",
+            "id": "10_12",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "10_13",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "-"
+            },
+            "enable": "onActivateIn",
+            "id": "10_13",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "10_14",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": ">"
+            },
+            "enable": "onActivateIn",
+            "id": "10_14",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "10_15",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "10_17",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "10_18",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "\\r"
+            },
+            "enable": "onActivateIn",
+            "id": "10_15",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "10_16",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "\\n"
+            },
+            "enable": "onActivateIn",
+            "id": "10_16",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "\\r"
+            },
+            "enable": "onActivateIn",
+            "id": "10_17",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "\\n"
+            },
+            "enable": "onActivateIn",
+            "id": "10_18",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "[\\t\\n\\r\\x20]"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "10_4",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "10_4",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "10_5",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "<"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "10_5",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "10_6",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "!"
+            },
+            "enable": "onActivateIn",
+            "id": "10_6",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "10_7",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "-"
+            },
+            "enable": "onActivateIn",
+            "id": "10_7",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "10_8",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "-"
+            },
+            "enable": "onActivateIn",
+            "id": "10_8",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "10_9",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "10_10",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "10_12",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 10,
+                "symbolSet": "[^-]"
+            },
+            "enable": "onActivateIn",
+            "id": "10_9",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "10_9",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "10_10",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "10_12",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 1,
+                "symbolSet": "T"
+            },
+            "enable": "onActivateIn",
+            "id": "1_10",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "1_11",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 1,
+                "symbolSet": "Y"
+            },
+            "enable": "onActivateIn",
+            "id": "1_11",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "1_12",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 1,
+                "symbolSet": "P"
+            },
+            "enable": "onActivateIn",
+            "id": "1_12",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "1_13",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 1,
+                "symbolSet": "E"
+            },
+            "enable": "onActivateIn",
+            "id": "1_13",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "1_14",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 1,
+                "symbolSet": "[\\t\\n\\r\\x20]"
+            },
+            "enable": "onActivateIn",
+            "id": "1_14",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "1_14",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 1,
+                "symbolSet": "[\\t\\n\\r\\x20]"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "1_4",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "1_4",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "1_5",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 1,
+                "symbolSet": "<"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "1_5",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "1_6",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 1,
+                "symbolSet": "!"
+            },
+            "enable": "onActivateIn",
+            "id": "1_6",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "1_7",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 1,
+                "symbolSet": "D"
+            },
+            "enable": "onActivateIn",
+            "id": "1_7",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "1_8",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 1,
+                "symbolSet": "O"
+            },
+            "enable": "onActivateIn",
+            "id": "1_8",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "1_9",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 1,
+                "symbolSet": "C"
+            },
+            "enable": "onActivateIn",
+            "id": "1_9",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "1_10",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 2,
+                "symbolSet": "/"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "2_4",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 3,
+                "symbolSet": "="
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "3_4",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 4,
+                "symbolSet": ">"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "4_4",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "4_5",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "4_7",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "4_8",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 4,
+                "symbolSet": "\\r"
+            },
+            "enable": "onActivateIn",
+            "id": "4_5",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "4_6",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 4,
+                "symbolSet": "\\n"
+            },
+            "enable": "onActivateIn",
+            "id": "4_6",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 4,
+                "symbolSet": "\\r"
+            },
+            "enable": "onActivateIn",
+            "id": "4_7",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 4,
+                "symbolSet": "\\n"
+            },
+            "enable": "onActivateIn",
+            "id": "4_8",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 5,
+                "symbolSet": "?"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "5_4",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "5_5",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 5,
+                "symbolSet": ">"
+            },
+            "enable": "onActivateIn",
+            "id": "5_5",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "5_6",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "5_8",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "5_9",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 5,
+                "symbolSet": "\\r"
+            },
+            "enable": "onActivateIn",
+            "id": "5_6",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "5_7",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 5,
+                "symbolSet": "\\n"
+            },
+            "enable": "onActivateIn",
+            "id": "5_7",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 5,
+                "symbolSet": "\\r"
+            },
+            "enable": "onActivateIn",
+            "id": "5_8",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 5,
+                "symbolSet": "\\n"
+            },
+            "enable": "onActivateIn",
+            "id": "5_9",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 6,
+                "symbolSet": "[:A-Z_a-z\\x80-\\xff]"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "6_4",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "6_5",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 6,
+                "symbolSet": "[\\w-\\.:\\x80-\\xff]"
+            },
+            "enable": "onActivateIn",
+            "id": "6_5",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "6_5",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "&"
+            },
+            "enable": "onActivateIn",
+            "id": "7_10",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_11",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "#"
+            },
+            "enable": "onActivateIn",
+            "id": "7_11",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_12",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "x"
+            },
+            "enable": "onActivateIn",
+            "id": "7_12",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_13",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "[\\dA-Fa-f]"
+            },
+            "enable": "onActivateIn",
+            "id": "7_13",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_13",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_14",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": ";"
+            },
+            "enable": "onActivateIn",
+            "id": "7_14",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_5",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_6",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_10",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_15",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "\""
+            },
+            "enable": "onActivateIn",
+            "id": "7_15",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "'"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "7_16",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_17",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_18",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_22",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_27",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "[^&']"
+            },
+            "enable": "onActivateIn",
+            "id": "7_17",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_17",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_18",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_22",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_27",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "&"
+            },
+            "enable": "onActivateIn",
+            "id": "7_18",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_19",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "#"
+            },
+            "enable": "onActivateIn",
+            "id": "7_19",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_20",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "[0-9]"
+            },
+            "enable": "onActivateIn",
+            "id": "7_20",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_20",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_21",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": ";"
+            },
+            "enable": "onActivateIn",
+            "id": "7_21",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_17",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_18",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_22",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_27",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "&"
+            },
+            "enable": "onActivateIn",
+            "id": "7_22",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_23",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "#"
+            },
+            "enable": "onActivateIn",
+            "id": "7_23",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_24",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "x"
+            },
+            "enable": "onActivateIn",
+            "id": "7_24",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_25",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "[\\dA-Fa-f]"
+            },
+            "enable": "onActivateIn",
+            "id": "7_25",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_25",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_26",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": ";"
+            },
+            "enable": "onActivateIn",
+            "id": "7_26",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_17",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_18",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_22",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_27",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "'"
+            },
+            "enable": "onActivateIn",
+            "id": "7_27",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "\""
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "7_4",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_5",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_6",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_10",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_15",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "[^\"&]"
+            },
+            "enable": "onActivateIn",
+            "id": "7_5",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_5",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_6",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_10",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_15",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "&"
+            },
+            "enable": "onActivateIn",
+            "id": "7_6",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_7",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "#"
+            },
+            "enable": "onActivateIn",
+            "id": "7_7",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_8",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": "[0-9]"
+            },
+            "enable": "onActivateIn",
+            "id": "7_8",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_8",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_9",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 7,
+                "symbolSet": ";"
+            },
+            "enable": "onActivateIn",
+            "id": "7_9",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "7_5",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_6",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_10",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "7_15",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 8,
+                "symbolSet": "[\\t\\n\\r\\x20]"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "8_4",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "8_4",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "8_5",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 8,
+                "symbolSet": "<"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "8_5",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "8_6",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 8,
+                "symbolSet": "?"
+            },
+            "enable": "onActivateIn",
+            "id": "8_6",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 9,
+                "symbolSet": "[\\t\\n\\r\\x20]"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "9_4",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [
+                        {
+                            "id": "9_4",
+                            "portId": "i"
+                        },
+                        {
+                            "id": "9_5",
+                            "portId": "i"
+                        }
+                    ],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": false,
+            "type": "hState"
+        },
+        {
+            "attributes": {
+                "latched": false,
+                "reportId": 9,
+                "symbolSet": "<"
+            },
+            "enable": "onStartAndActivateIn",
+            "id": "9_5",
+            "inputDefs": [
+                {
+                    "portId": "i",
+                    "width": 1
+                }
+            ],
+            "outputDefs": [
+                {
+                    "activate": [],
+                    "portId": "o",
+                    "width": 1
+                }
+            ],
+            "report": true,
+            "type": "hState"
+        }
+    ]
+}

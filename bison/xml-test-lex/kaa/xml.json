@@ -1,0 +1,10 @@
+{
+  "start": "xml:document",
+  "grammars": {
+    "xml": {
+      "files": [
+        "XMLLexer.g4", "XMLParser.g4"
+      ]
+    }
+  }
+}
