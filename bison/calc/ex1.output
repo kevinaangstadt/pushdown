@@ -1,0 +1,241 @@
+Grammar
+
+    0 $accept: run $end
+
+    1 run: res run
+    2    | res
+
+    3 res: exp STOP
+
+    4 exp: exp OPA term
+    5    | term
+
+    6 term: term OPM factor
+    7     | sfactor
+
+    8 sfactor: OPA factor
+    9        | factor
+
+   10 factor: NUM
+   11       | LP exp RP
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+NUM (258) 10
+OPA (259) 4 8
+OPM (260) 6
+LP (261) 11
+RP (262) 11
+STOP (263) 3
+
+
+Nonterminals, with rules where they appear
+
+$accept (9)
+    on left: 0
+run (10)
+    on left: 1 2, on right: 0 1
+res (11)
+    on left: 3, on right: 1 2
+exp (12)
+    on left: 4 5, on right: 3 4 11
+term (13)
+    on left: 6 7, on right: 4 5 6
+sfactor (14)
+    on left: 8 9, on right: 7
+factor (15)
+    on left: 10 11, on right: 6 8 9
+
+
+State 0
+
+    0 $accept: . run $end
+
+    NUM  shift, and go to state 1
+    OPA  shift, and go to state 2
+    LP   shift, and go to state 3
+
+    run      go to state 4
+    res      go to state 5
+    exp      go to state 6
+    term     go to state 7
+    sfactor  go to state 8
+    factor   go to state 9
+
+
+State 1
+
+   10 factor: NUM .
+
+    $default  reduce using rule 10 (factor)
+
+
+State 2
+
+    8 sfactor: OPA . factor
+
+    NUM  shift, and go to state 1
+    LP   shift, and go to state 3
+
+    factor  go to state 10
+
+
+State 3
+
+   11 factor: LP . exp RP
+
+    NUM  shift, and go to state 1
+    OPA  shift, and go to state 2
+    LP   shift, and go to state 3
+
+    exp      go to state 11
+    term     go to state 7
+    sfactor  go to state 8
+    factor   go to state 9
+
+
+State 4
+
+    0 $accept: run . $end
+
+    $end  shift, and go to state 12
+
+
+State 5
+
+    1 run: res . run
+    2    | res .
+
+    NUM  shift, and go to state 1
+    OPA  shift, and go to state 2
+    LP   shift, and go to state 3
+
+    $default  reduce using rule 2 (run)
+
+    run      go to state 13
+    res      go to state 5
+    exp      go to state 6
+    term     go to state 7
+    sfactor  go to state 8
+    factor   go to state 9
+
+
+State 6
+
+    3 res: exp . STOP
+    4 exp: exp . OPA term
+
+    OPA   shift, and go to state 14
+    STOP  shift, and go to state 15
+
+
+State 7
+
+    5 exp: term .
+    6 term: term . OPM factor
+
+    OPM  shift, and go to state 16
+
+    $default  reduce using rule 5 (exp)
+
+
+State 8
+
+    7 term: sfactor .
+
+    $default  reduce using rule 7 (term)
+
+
+State 9
+
+    9 sfactor: factor .
+
+    $default  reduce using rule 9 (sfactor)
+
+
+State 10
+
+    8 sfactor: OPA factor .
+
+    $default  reduce using rule 8 (sfactor)
+
+
+State 11
+
+    4 exp: exp . OPA term
+   11 factor: LP exp . RP
+
+    OPA  shift, and go to state 14
+    RP   shift, and go to state 17
+
+
+State 12
+
+    0 $accept: run $end .
+
+    $default  accept
+
+
+State 13
+
+    1 run: res run .
+
+    $default  reduce using rule 1 (run)
+
+
+State 14
+
+    4 exp: exp OPA . term
+
+    NUM  shift, and go to state 1
+    OPA  shift, and go to state 2
+    LP   shift, and go to state 3
+
+    term     go to state 18
+    sfactor  go to state 8
+    factor   go to state 9
+
+
+State 15
+
+    3 res: exp STOP .
+
+    $default  reduce using rule 3 (res)
+
+
+State 16
+
+    6 term: term OPM . factor
+
+    NUM  shift, and go to state 1
+    LP   shift, and go to state 3
+
+    factor  go to state 19
+
+
+State 17
+
+   11 factor: LP exp RP .
+
+    $default  reduce using rule 11 (factor)
+
+
+State 18
+
+    4 exp: exp OPA term .
+    6 term: term . OPM factor
+
+    OPM  shift, and go to state 16
+
+    $default  reduce using rule 4 (exp)
+
+
+State 19
+
+    6 term: term OPM factor .
+
+    $default  reduce using rule 6 (term)
+
