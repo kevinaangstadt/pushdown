@@ -44,6 +44,7 @@ public:
   yyFlexLexer( istream* arg_yyin = &std::cin, ostream* arg_yyout = &std::cout );
   virtual ~yyFlexLexer();
   virtual int yylex();
+  virtual uint64_t YYCycles() { return pos; };
   virtual void switch_streams(istream* new_in = 0, ostream* new_out = 0);
   int yylex( istream* new_in, ostream* new_out );
   

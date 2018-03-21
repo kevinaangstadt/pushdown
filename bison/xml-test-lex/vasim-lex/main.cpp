@@ -41,9 +41,13 @@ int main(int argc, char *argv[]) {
   } /* else: read from stdin */ 
 
   int this_token;
+  uint64_t tok_cnt = 0;
+  
   while ( (this_token = l.yylex()) ) { 
     //printf("token = %02x = %s [%s]\n", this_token, token_to_str[this_token], l.YYText());
     printf("%c", this_token);
+    cerr << ++tok_cnt << ", " << l.YYCycles() << "\n";
+    
   }
   printf("%c", $end);
 

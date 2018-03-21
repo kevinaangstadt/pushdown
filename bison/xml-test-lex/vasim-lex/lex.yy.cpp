@@ -71,6 +71,8 @@ int yyFlexLexer::yylex() {
   } 
   
   bool eof = false;
+  // reset pos
+  pos = 0;
   
   do {
     try {
