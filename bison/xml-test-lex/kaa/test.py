@@ -45,7 +45,7 @@ def main():
 
         vasim_cmd = [
             "/home/kaa2nx/AP/vasim-dpda/vasim", "-r",
-            "/home/kaa2nx/AP/pushdown/bison/xml-parser/xml.mnrl",
+            "/home/kaa2nx/AP/pushdown/bison/xml-test-lex/parser/xml.multi.epsreduced.mnrl",
             os.path.join(d, "xml.input")
         ]
 

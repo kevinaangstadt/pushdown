@@ -313,7 +313,6 @@ class Pushdown(object):
                             (pop.id, mnrl.MNRLDefs.H_PD_STATE_INPUT))
 
                         tmp = pop
-
                 # add this to our list that we need to wire up for reductions
                 reductions.append(tmp)
 
@@ -330,8 +329,6 @@ class Pushdown(object):
                 for lookahead, target_node in state['nonterms'].get(
                         lhs, dict()).iteritems():
                     if target_node is not None and lookahead == la:
-                        if id == 17 and node.id == "_471":
-                            print lhs, target_node.id, node.attributes["ply"]
                         # This reduction state exists, we should connect it
                         mn.addConnection(
                             (node.id, mnrl.MNRLDefs.H_PD_STATE_OUTPUT),
