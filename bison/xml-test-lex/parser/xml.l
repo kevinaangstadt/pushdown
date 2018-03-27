@@ -51,7 +51,9 @@ inf		{esp}?"<"
 sup		">"{nl}?
 debutnom	[:A-Za-z\200-\377_]
 caracnom	[:A-Za-z\200-\377_0-9.-]
-esc		"&#"[0-9]+";"|"&#x"[0-9a-fA-F]+";"
+/* KAA the esc rule does not handle xml escapes
+esc		"&#"[0-9]+";"|"&#x"[0-9a-fA-F]+";" */
+esc "&#"[0-9]+";"|"&#x"[0-9a-fA-F]+";"|"&"(apos|quot|amp|lt|gt)";"
 nom		{debutnom}{caracnom}*
 colon		":"
 data		([^<\n&]|\n[^<&]|\n{esc}|{esc})+

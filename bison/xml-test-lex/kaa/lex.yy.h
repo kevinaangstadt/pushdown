@@ -330,7 +330,7 @@ extern int yylex (void);
 #undef YY_DECL
 #endif
 
-#line 104 "xml.l"
+#line 106 "xml.l"
 
 
 #line 337 "lex.yy.h"
