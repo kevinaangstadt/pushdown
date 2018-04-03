@@ -3,6 +3,8 @@ import ply.yacc as yacc
 # get the token map from the lexer
 from lex import tokens
 
+import sys
+
 import pushdown
 Pushdown = pushdown.Pushdown
 State = pushdown.State
@@ -46,27 +48,28 @@ Reduce = pushdown.Reduce
 # exp        := DOT | TERMINAL | NONTERMINAL
 # operation  := SHIFT | REDUCE LPAREN production RPAREN
 
+terminals = ["<empty>"]
+non_terminals = []
+
 
 def p_file(p):
-    '''file : anythinglist GRAMMAR dnewline rulelist NEWLINE TLIST dnewline tlist NEWLINE NTLIST dnewline ntlist NEWLINE PMETHOD dnewline statelist'''
-    terms = [x for (x, _) in p[8]]
-    nterms = [x for (x, _) in p[12]]
+    '''file : anythinglist GRAMMAR DNEWLINE rulelist TLIST DNEWLINE tlist NTLIST DNEWLINE ntlist  PMETHOD DNEWLINE statelist'''
+    terms = [x for (x, _) in p[7]]
+    nterms = [x for (x, _) in p[10]]
 
-    p[0] = Pushdown(p[14], terms, nterms)
+    print "non_terminals:", non_terminals
+    print "terminals:", terminals
+
+    p[0] = Pushdown(p[13], terms, nterms)
 
     for r in p[4]:
         p[0].add_rule(r)
-    for s in p[16]:
+    for s in p[13]:
         p[0].add_state(s)
-    for k, v in p[8]:
+    for k, v in p[7]:
         p[0].add_t(k, v)
-    for k, v in p[12]:
+    for k, v in p[10]:
         p[0].add_nt(k, v)
-
-
-def p_dnewline(p):
-    '''dnewline : NEWLINE NEWLINE'''
-    pass
 
 
 # ignore everything before we see the start of the GRAMMAR
@@ -79,33 +82,26 @@ def p_anything(p):
                  | SHIFT
                  | REDUCE
                  | RARROW
-                 | TERMINAL
-                 | NONTERMINAL
+                 | IDENT
                  | INT
                  | COLON
                  | LPAREN
                  | RPAREN
                  | DOT
-                 | NEWLINE'''
+                 | NEWLINE
+                 | DNEWLINE'''
     pass
 
 
 # We'll simplify things by having a single rule for all our list productions
 def p_list(p):
-    '''rulelist  : rule NEWLINE rulelist
-                 | empty
-       tlist     : tterm NEWLINE tlist
-                 | empty
-       ntlist    : ntterm NEWLINE ntlist
-                 | empty
-       statelist : state NEWLINE statelist
+    '''statelist : state statelist
+                 | state NEWLINE statelist
                  | empty
        numbers   : INT numbers
                  | empty
-       srulelist : srule NEWLINE srulelist
-                 | empty
        trules   : trule NEWLINE trules
-                 | empty
+                 | DNEWLINE
        ntrules  : ntrule NEWLINE ntrules
                  | empty
        erhs      : exp erhs
@@ -120,10 +116,42 @@ def p_list(p):
         p[0] = [p[1]] + p[2]
 
 
+def p_non_empty_list(p):
+    '''tlist     : tterm NEWLINE tlist
+                 | tterm DNEWLINE
+       ntlist    : ntterm NEWLINE ntlist
+                 | ntterm DNEWLINE
+       srulelist : srule NEWLINE srulelist
+                 | srule DNEWLINE
+       sactions : action NEWLINE sactions
+                | action DNEWLINE'''
+    if len(p) == 3:
+        p[0] = [p[1]]
+    else:
+        p[0] = [p[1]] + p[3]
+
+
+# def p_rulelist(p):
+#     '''rulelist : ruleset DNEWLINE rulelist
+#                 | empty'''
+#     if len(p) == 2:
+#         p[0] = list()
+#     else:
+#         p[0] = p[1] + p[3]
+
 # def p_forced_list(p):
 #     '''trules  : trule etrules
 #        ntrules : ntrule entrules'''
 #     p[0] = [p[1]] + p[2]
+
+
+def p_ruleset(p):
+    '''rulelist   : rule NEWLINE rulelist
+                 | rule DNEWLINE'''
+    if len(p) == 3:
+        p[0] = [p[1]]
+    else:
+        p[0] = [p[1]] + p[3]
 
 
 def p_rule(p):
@@ -132,24 +160,41 @@ def p_rule(p):
 
 
 def p_tterm(p):
-    '''tterm : TERMINAL COLON numbers'''
+    '''tterm : IDENT COLON numbers'''
+    global terminals
+    terminals.append(p[1])
     p[0] = (p[1], p[3])
 
 
 def p_ntterm(p):
-    '''ntterm : NONTERMINAL COLON numbers'''
+    '''ntterm : IDENT COLON numbers'''
+    global non_terminals
+    non_terminals.append(p[1])
     p[0] = (p[1], p[3])
 
 
 def p_state(p):
-    '''state : STATE dnewline srulelist NEWLINE trules NEWLINE ntrules'''
+    '''state : STATE DNEWLINE srulelist sactions sactions
+             | STATE DNEWLINE srulelist sactions
+             | STATE DNEWLINE srulelist DNEWLINE'''
+
+    actions = []
+
+    if isinstance(p[4], list):
+        actions.extend([(x, y) for (x, y) in p[4] if y is not None])
+
+    if len(p) >= 6:
+        actions.extend([(x, y) for (x, y) in p[5] if y is not None])
+
     # make a dict of t- and nt-transitions
     t = dict()
     nt = dict()
-    for k, v in p[5]:
-        t[k] = v
-    for k, v in p[7]:
-        nt[k] = v
+
+    for k, v in actions:
+        if k in non_terminals:
+            nt[k] = v
+        else:
+            t[k] = v
     p[0] = State(p[1], p[3], t, nt)
 
 
@@ -174,7 +219,7 @@ def p_state(p):
 
 
 def p_production(p):
-    '''production : NONTERMINAL RARROW rhs'''
+    '''production : IDENT RARROW rhs'''
     p[0] = Production(p[1], p[3])
 
 
@@ -188,20 +233,20 @@ def p_srule(p):
     p[0] = ParseState(p[2], p[4]._rhs.index('.'))
 
 
-def p_trule(p):
-    '''trule : TERMINAL operation'''
-    p[0] = (p[1], p[2])
-
-
-def p_ntrule(p):
-    '''ntrule : NONTERMINAL operation'''
-    p[0] = (p[1], p[2])
+def p_action(p):
+    '''trule : IDENT operation
+       ntrule : IDENT operation
+       action : IDENT operation
+              | BANG IDENT LBRACKET operation RBRACKET'''
+    if len(p) == 6:
+        p[0] = (p[2], None)
+    else:
+        p[0] = (p[1], p[2])
 
 
 def p_exp(p):
     '''exp : DOT
-           | TERMINAL
-           | NONTERMINAL'''
+           | IDENT'''
     p[0] = p[1]
 
 
@@ -217,10 +262,10 @@ def p_operation(p):
 # Error rule for syntax errors
 def p_error(p):
     if not p:
-        print "Endo of File!"
-        parser.errok()
+        print "End of File!"
+        return
     print "Syntax error at token", p.type, "on line", p.lineno
-    parser.errorok()
+    sys.exit(1)
 
 
 def p_empty(p):

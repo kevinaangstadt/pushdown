@@ -8,8 +8,8 @@ import ply.lex as lex
 
 # List of token names
 tokens = ('RULE', 'STATE', 'GRAMMAR', 'TLIST', 'NTLIST', 'PMETHOD', 'SHIFT',
-          'REDUCE', 'RARROW', 'TERMINAL', 'NONTERMINAL', 'INT', 'COLON',
-          'LPAREN', 'RPAREN', 'DOT', 'NEWLINE')
+          'REDUCE', 'RARROW', 'IDENT', 'INT', 'COLON', 'LPAREN', 'RPAREN',
+          'DOT', 'NEWLINE', 'DNEWLINE', 'BANG', 'LBRACKET', 'RBRACKET')
 
 # keep track if we've not seen the EOF yet
 _lex_first_time = True
@@ -75,16 +75,26 @@ def t_RARROW(t):
     return t
 
 
-def t_NONTERMINAL(t):
-    r"S'|([a-z]\w*)"
-    if t.value == "error":
-        t.type = 'TERMINAL'
+# def t_EMPTY(t):
+#     r"<empty>"
+#     pass
+
+
+def t_IDENT(t):
+    r"(\$end)|<empty>|S'|([a-zA-Z]\w*)"
     return t
 
 
-def t_TERMINAL(t):
-    r'(\$end)|<empty>|([A-Z]\w*)'
-    return t
+# def t_NONTERMINAL(t):
+#     r"S'|([a-z]\w*)"
+#     if t.value == "error":
+#         t.type = 'TERMINAL'
+#     return t
+#
+#
+# def t_TERMINAL(t):
+#     r'(\$end)|<empty>|([A-Z]\w*)'
+#     return t
 
 
 def t_INT(t):
@@ -108,8 +118,29 @@ def t_RPAREN(t):
     return t
 
 
+def t_LBRACKET(t):
+    r'\['
+    return t
+
+
+def t_RBRACKET(t):
+    r'\]'
+    return t
+
+
+def t_BANG(t):
+    r'!'
+    return t
+
+
 def t_DOT(t):
     r'\.'
+    return t
+
+
+def t_DNEWLINE(t):
+    r'\n[\t\r ]*\n'
+    t.lexer.lineno += 2
     return t
 
 

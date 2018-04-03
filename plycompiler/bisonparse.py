@@ -192,13 +192,13 @@ def p_state(p):
     '''state : STATE DNEWLINE srulelist sactions sactions sactions
              | STATE DNEWLINE srulelist sactions sactions
              | STATE DNEWLINE srulelist sactions'''
-    actions = p[4]
+    actions = [(x, y) for (x, y) in p[4] if y is not None]
 
     if len(p) >= 6:
-        actions.extend(p[5])
+        actions.extend([(x, y) for (x, y) in p[5] if y is not None])
 
     if len(p) == 7:
-        actions.extend(p[6])
+        actions.extend([(x, y) for (x, y) in p[6] if y is not None])
 
     # make a dict of t- and nt-transitions
     t = dict()
@@ -274,8 +274,12 @@ def p_srule(p):
 def p_action(p):
     '''trule : IDENT operation
        ntrule : IDENT operation
-       action : IDENT operation'''
-    p[0] = (p[1], p[2])
+       action : IDENT operation
+              | IDENT LBRACKET operation RBRACKET'''
+    if len(p) == 5:
+        p[0] = (p[1], None)
+    else:
+        p[0] = (p[1], p[2])
 
 
 def p_exp(p):

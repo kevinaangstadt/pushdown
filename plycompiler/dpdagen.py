@@ -4,6 +4,8 @@ import argparse
 import os
 import parse
 import bisonparse
+import lex
+import bisonlex
 
 
 def write_tokens(terms, enum_name="token", filename=None):
@@ -137,9 +139,11 @@ def main():
         thefile = f.read()
 
     if args.bison:
-        machine = bisonparse.parser.parse(thefile, debug=args.debug)
+        machine = bisonparse.parser.parse(
+            thefile, lexer=bisonlex.lexer, debug=args.debug)
     else:
-        machine = parse.parser.parse(thefile, debug=args.debug)
+        machine = parse.parser.parse(
+            thefile, lexer=lex.lexer, debug=args.debug)
 
     # set up multipop
     machine.set_multipop(args.multipop)

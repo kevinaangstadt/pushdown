@@ -134,6 +134,9 @@ class Pushdown(object):
         # let's build up the information we need now...abs
         # STEP 1: For each state, make a dict and populate with all of the
         # terminals and non-terminals
+        
+        print "Initializing Data Structures..."
+        
         mnrl_nodes = dict.fromkeys(self._states.keys())
 
         for k in mnrl_nodes:
@@ -151,6 +154,8 @@ class Pushdown(object):
                 state["nonterms"][j] = dict.fromkeys(self._terms.keys())
 
         # STEP 2: Add all of the states
+        print "Populating states..."
+        
         for k, state in self._states.iteritems():
             # we need to create a different state for each combination
             # of input/stack/push/pop
@@ -291,6 +296,7 @@ class Pushdown(object):
                 }
 
         # STEP 3: We now need to add additional popping nodes
+        print "Handling remaining pops..."
         reductions = list()
         for node in mn.nodes.values():
             # we first check if this is a reduction node that needs some
@@ -317,8 +323,10 @@ class Pushdown(object):
                 reductions.append(tmp)
 
         # STEP 4: Now, it's time to wire everything up
+        print "Adding transitions..."
 
         # STEP 4.1: We'll do the reduction wiring
+        print "  wiring reductions..."
         for node in reductions:
             la = node.attributes['lookahead']
             lhs = node.attributes['lhs']
@@ -335,6 +343,7 @@ class Pushdown(object):
                             (target_node.id, mnrl.MNRLDefs.H_PD_STATE_INPUT))
 
         # STEP 4.2: We'll connect all of the shift operations
+        print "  wiring shifts..."
         for id, node in mn.nodes.iteritems():
             la = node.attributes['lookahead']
             if 'goto' in node.attributes:
@@ -356,6 +365,7 @@ class Pushdown(object):
                             (st["action"].id, mnrl.MNRLDefs.H_PD_STATE_INPUT))
 
         # STEP 5: remove extra nodes
+        print "Removing unreachable nodes..."
         changed = True
         while changed:
             changed = False
@@ -379,7 +389,7 @@ class Pushdown(object):
             node.attributes.pop('toPush', None)
             node.attributes.pop('toPop', None)
 
-        # STEP 5: Return the MNRL network
+        # STEP 6: Return the MNRL network
         return mn
 
 

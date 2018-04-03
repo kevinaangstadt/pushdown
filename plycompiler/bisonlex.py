@@ -10,7 +10,7 @@ import ply.lex as lex
 tokens = ('RULE', 'STATE', 'GRAMMAR', 'TLIST', 'NTLIST', 'PMETHOD', 'SHIFT',
           'REDUCE', 'RARROW', 'IDENT', 'INT', 'COLON', 'VERT', 'COMMA',
           'LPAREN', 'RPAREN', 'DOT', 'NEWLINE', 'DNEWLINE', 'ONLEFT',
-          'ONRIGHT', 'ACCEPT', 'EOF')
+          'ONRIGHT', 'ACCEPT', 'EOF', 'CONFLICT', 'LBRACKET', 'RBRACKET')
 
 # keep track if we've not seen the EOF yet
 _lex_first_time = True
@@ -24,6 +24,11 @@ def t_RULE(t):
 
 def t_HEADER(t):
     r"Created[ ]by[ ]PLY[ ]version[ ]\d+\.\d+[ ]\([a-zA-z0-9_:/.%]+\)"
+    pass
+
+
+def t_CONFLICT(t):
+    r"State[ ]\d+[ ]conflicts:[ ]\d+[ ](shift|reduce)/reduce"
     pass
 
 
@@ -87,7 +92,7 @@ def t_RARROW(t):
 
 
 def t_IDENT(t):
-    r"(\$default)|(\$accept)|(\$end)|([a-zA-Z]\w*)"
+    r"(\$default)|(\$accept)|(\$end)|([a-zA-Z]\w*)|'[^']+'"
     if t.value == "accept":
         t.type = 'ACCEPT'
     return t
@@ -128,6 +133,16 @@ def t_LPAREN(t):
 
 def t_RPAREN(t):
     r'\)'
+    return t
+
+
+def t_LBRACKET(t):
+    r'\['
+    return t
+
+
+def t_RBRACKET(t):
+    r'\]'
     return t
 
 

@@ -28,7 +28,9 @@ def mnrl2dot(mn):
         return int(x[1:])
 
     g = pydotplus.Graph(name=mn.id)
-
+    
+    print "Number of nodes", len(mn.nodes)
+    
     # STEP 1: add in all of the nodes
     for _, node in sorted(mn.nodes.iteritems(), key=tuple2int):
         if isinstance(node, mnrl.HPDState):
